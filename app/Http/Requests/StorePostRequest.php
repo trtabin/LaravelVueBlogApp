@@ -28,6 +28,7 @@ class StorePostRequest extends FormRequest
             'description' => 'required',
             'isPublished' => 'required',
             'image' => 'mimes:jpeg,jpg,png|required|max:2000',
+            'categories' => 'required'
         ];
     }
 }

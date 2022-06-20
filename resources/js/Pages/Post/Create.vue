@@ -18,6 +18,17 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label for="title" class="form-label"
+                    >Select Catogory<span class="text-danger">*</span></label
+                >
+                <Multiselect
+                    v-model="form.categories"
+                    mode="multiple"
+                    :close-on-select="false"
+                    :options="category"
+                />
+            </div>
+            <div class="mb-3">
                 <label class="form-label"
                     >Upload Image<span class="text-danger">*</span></label
                 >
@@ -73,16 +84,18 @@
 <script>
 import AdminLayout from "../../Layouts/Admin";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
+import Multiselect from "@vueform/multiselect";
 export default {
     components: {
         AdminLayout,
         Head,
         Link,
         useForm,
+        Multiselect,
     },
     props: {
         errors: Object,
-        category: Array,
+        category: Object,
     },
 
     setup() {
@@ -91,9 +104,12 @@ export default {
             description: "",
             isPublished: false,
             image: null,
+            categories: null,
         });
 
         return { form };
     },
 };
 </script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>

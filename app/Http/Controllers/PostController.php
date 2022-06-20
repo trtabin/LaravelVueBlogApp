@@ -10,66 +10,54 @@ use Inertia\Inertia;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $data = Post::with('categories')->latest()->paginate(5);
-    //    dd($data->toArray());
         return Inertia::render('Post/Index',[
             'data' => $data
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $category = Category::all();
         return Inertia::render('Post/Create', [
-            'category' => $category
+            'category' => Category::pluck('name','id')->toArray()
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StorePostRequest  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(StorePostRequest $request)
     {
-        
-        $path = public_path('images');
-        if (!file_exists($path)) {
-          mkdir($path, 0777, true);
-        }
-        $file = $request->file('image');
-        $name = uniqid() . '_' . trim($file->getClientOriginalName());
-        $file->move($path, $name);
+        try {
+            $path = public_path('images');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            $file = $request->file('image');
+            $name = uniqid() . '_' . trim($file->getClientOriginalName());
+            $file->move($path, $name);
 
-        Post::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'isPublished' => $request->isPublished,
-            'image' => $name,
-        ]);
-        return redirect()->route('post.index')
-            ->with('message', 'Post Created Successfully');
+            $post = new Post;
+            $post->title = $request->title;
+            $post->description = $request->description;
+            $post->isPublished = $request->isPublished;
+            $post->image = $name;
+            $post->save();
+            $post->categories()->attach($request->categories);
+
+            return redirect()->route('post.index')
+                ->with('message', 'Post Created Successfully');
+        } catch (e) {
+            return redirect()->route('post.index')
+                ->with('message', 'No Post Created');
+        }
+
+        
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Post $post)
     {
         $post = Post::find($post->id);
@@ -78,24 +66,11 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Post $post)
     {
         return Inertia::render('Post/Edit', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatePostRequest  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdatePostRequest $request, Post $post)
     {
         $post->update($request->validated());
@@ -103,12 +78,7 @@ class PostController extends Controller
             ->with('message', 'Post Edited Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Post $post)
     {
         $post->delete();

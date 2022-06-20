@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -15,7 +16,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $data = Post::latest()->paginate(5);
+        return Inertia::render('Post/Index',[
+            'data' => $data
+        ]);
     }
 
     /**
@@ -25,7 +29,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Post/Create');
     }
 
     /**
@@ -36,7 +40,9 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        Post::create($request->validated());
+        return redirect()->route('post.index')
+            ->with('message', 'Post Created Successfully');
     }
 
     /**
@@ -47,7 +53,10 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $post = Post::find($post->id);
+        return Inertia::render('Post/Show',[
+            'post' => $post
+        ]);
     }
 
     /**
@@ -58,7 +67,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return Inertia::render('Post/Edit', compact('post'));
     }
 
     /**
@@ -70,7 +79,9 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+        return redirect()->route('post.index')
+            ->with('message', 'Post Edited Successfully');
     }
 
     /**
@@ -81,6 +92,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('post.index')
+            ->with('message', 'Post Deleted Successfully');
     }
 }

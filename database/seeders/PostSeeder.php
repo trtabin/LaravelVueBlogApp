@@ -14,7 +14,7 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Post::factory(10)->hasAttached(
+        \App\Models\Post::factory(20)->hasAttached(
             \App\Models\Category::factory(2)
            )->create();
     }

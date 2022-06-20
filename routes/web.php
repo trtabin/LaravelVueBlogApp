@@ -4,6 +4,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
+use App\Models\Post;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,16 +21,33 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+    $data = Post::where('isPublished', 1)->latest()->paginate(4);
+    return Inertia::render('Welcome',[
+        'data' => $data
     ]);
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+
+
+
+
+Route::get('/blog/{post}', function (Post $post) {
+    // dd(compact('post'));
+    return Inertia::render('Blog',[
+        'data' => compact('post')
+    ]);
+})->name('blog');
+
+Route::prefix('admin')->group(function () {
+    
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::resource('post', PostController::class);
+        Route::resource('category', CategoryController::class);
+    });
+
+    require __DIR__.'/auth.php';
+});

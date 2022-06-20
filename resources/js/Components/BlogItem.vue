@@ -5,7 +5,7 @@
         <p>
             {{ post.description }}
         </p>
-        <Link :href="route('blog', post)"> Read more</Link>
+        <Link :href="route('blog', post.id)"> Read more</Link>
     </div>
 </template>
 

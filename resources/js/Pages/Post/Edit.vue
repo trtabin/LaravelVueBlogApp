@@ -34,6 +34,17 @@
                 </div>
             </div>
             <div>
+                <input
+                    v-model="form.isPublished"
+                    type="checkbox"
+                    class="form-label"
+                    id="isPublished"
+                />
+                <label class="form-label" for="isPublished"
+                    >Publish the post</label
+                >
+            </div>
+            <div>
                 <button
                     type="submit"
                     class="inline-block px-2 py-2 bg-blue-500 text-white rounded my-2"

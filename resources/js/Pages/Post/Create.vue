@@ -2,7 +2,7 @@
     <Head title="Add Post" />
     <AdminLayout>
         <form @submit.prevent="form.post(route('post.store'))">
-            <div>
+            <div class="mb-3">
                 <label for="title" class="form-label"
                     >Title<span class="text-danger">*</span></label
                 >
@@ -15,6 +15,19 @@
                 />
                 <div v-if="errors.title" class="text-red-600">
                     {{ errors.title }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label"
+                    >Upload Image<span class="text-danger">*</span></label
+                >
+                <br />
+                <input
+                    type="file"
+                    @input="form.image = $event.target.files[0]"
+                />
+                <div v-if="errors.image" class="text-red-600">
+                    {{ errors.image }}
                 </div>
             </div>
             <div>
@@ -32,6 +45,17 @@
                 <div v-if="errors.description" class="text-red-600">
                     {{ errors.description }}
                 </div>
+            </div>
+            <div class="mb-3">
+                <input
+                    v-model="form.isPublished"
+                    type="checkbox"
+                    class="form-label"
+                    id="isPublished"
+                />
+                <label class="form-label" for="isPublished"
+                    >Publish the post</label
+                >
             </div>
             <div>
                 <button
@@ -58,12 +82,15 @@ export default {
     },
     props: {
         errors: Object,
+        category: Array,
     },
 
     setup() {
         const form = useForm({
             title: "",
             description: "",
+            isPublished: false,
+            image: null,
         });
 
         return { form };

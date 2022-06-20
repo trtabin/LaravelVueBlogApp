@@ -8,26 +8,27 @@
 
     <Navbar />
 
-    <FeatureBlog />
+    <section class="featured container my-5">
+        <div class="row">
+            <FeatureBlog v-for="post in data.data.slice(0, 3)" :post="post" />
+        </div>
+    </section>
 
     <section class="blog container my-6">
         <div class="row">
             <div class="post row col-lg-8 col-md-8 col-12">
-                <BlogItem v-for="post in data.data" :post="post" />
+                <BlogItem v-for="post in data.data.slice(3, 7)" :post="post" />
             </div>
 
             <div class="sidebar col-lg-4 col-md-4 col-12">
                 <div class="side">
                     <h4>My Personal favorites</h4>
                     <hr class="w-50" />
-                    <div v-for="post in data.data" class="row pb-3">
-                        <div class="sideimg col-lg-4 col-md-4 col-4">
-                            <img class="img-fluid" src="images/1.jpg" alt="" />
-                        </div>
-                        <div class="sidetext col-lg-8 col-md-8 col-8">
-                            <h4>{{ post.title }}</h4>
-                            <a href="#">Read more</a>
-                        </div>
+                    <div class="row pb-3">
+                        <PersonalFavoriteBlog
+                            v-for="post in data.data.slice(7, 10)"
+                            :post="post"
+                        />
                     </div>
                 </div>
             </div>
@@ -43,6 +44,7 @@ import Footer from "@/Components/Footer.vue";
 import Navbar from "@/Components/Navbar.vue";
 import FeatureBlog from "@/Components/FeatureBlog.vue";
 import BlogItem from "@/Components/BlogItem.vue";
+import PersonalFavoriteBlog from "@/Components/PersonalFavoriteBlog.vue";
 import Pagination from "@/Components/Pagination";
 
 export default {
@@ -51,10 +53,16 @@ export default {
         Navbar,
         FeatureBlog,
         BlogItem,
+        PersonalFavoriteBlog,
         Pagination,
     },
     props: {
         data: Object,
+    },
+    methods: {
+        getImage(pic) {
+            return "/images/" + pic;
+        },
     },
 };
 </script>

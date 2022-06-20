@@ -26,10 +26,10 @@
                     >
                 </li>
                 <li class="nav-item">
-                    <Link class="nav-link" href="#">About</Link>
+                    <Link class="nav-link">About</Link>
                 </li>
                 <li class="nav-item">
-                    <Link class="nav-link" href="#">Contact Us</Link>
+                    <Link class="nav-link">Contact Us</Link>
                 </li>
             </ul>
         </div>

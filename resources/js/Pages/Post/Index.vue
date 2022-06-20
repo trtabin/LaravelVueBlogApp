@@ -5,28 +5,35 @@
             <thead>
                 <tr>
                     <td>Title</td>
-                    <td>Action</td>
+                    <td>Status</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </thead>
             <tr v-for="post in data.data">
-                <td>{{ post.title }}</td>
-                <td width="130">
-                    <!-- <button @click="edit(row)" class="btn btn-sm btn-primary">Edit</button> -->
+                <td class="w-50">{{ post.title }}</td>
+                <td>{{ post.isPublished ? "Published" : "Not Published" }}</td>
+                <td>
+                    <button @click="show(post)" class="btn btn-sm btn-primary">
+                        Preview
+                    </button>
+                </td>
+                <td>
+                    <Link
+                        :href="route('post.edit', post.id)"
+                        class="btn btn-sm btn-secondary"
+                    >
+                        Edit
+                    </Link>
+                </td>
+                <td>
                     <button
                         @click="deletePost(post.id)"
                         class="btn btn-sm btn-danger"
                     >
-                        Del
+                        Delete
                     </button>
-                    <button @click="show(post)" class="btn btn-sm btn-danger">
-                        Show
-                    </button>
-                    <Link
-                        :href="route('post.edit', post.id)"
-                        class="btn btn-sm btn-danger"
-                    >
-                        Edit
-                    </Link>
                 </td>
             </tr>
         </table>
@@ -58,7 +65,7 @@ export default {
             }
         },
         show: function (data) {
-            this.$inertia.get(this.route("post.show", data));
+            this.$inertia.get(this.route("blog", data));
         },
     },
 };

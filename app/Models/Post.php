@@ -13,7 +13,9 @@ class Post extends Model
         'title',
         'description',
         'isPublished',
+        'image',
     ];
+
 
     public function categories()
     {

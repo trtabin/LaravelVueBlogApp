@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Category;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Inertia\Inertia;
@@ -16,7 +17,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $data = Post::latest()->paginate(5);
+        $data = Post::with('categories')->latest()->paginate(5);
+    //    dd($data->toArray());
         return Inertia::render('Post/Index',[
             'data' => $data
         ]);
@@ -29,7 +31,10 @@ class PostController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Post/Create');
+        $category = Category::all();
+        return Inertia::render('Post/Create', [
+            'category' => $category
+        ]);
     }
 
     /**
@@ -40,7 +45,21 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        Post::create($request->validated());
+        
+        $path = public_path('images');
+        if (!file_exists($path)) {
+          mkdir($path, 0777, true);
+        }
+        $file = $request->file('image');
+        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        Post::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'isPublished' => $request->isPublished,
+            'image' => $name,
+        ]);
         return redirect()->route('post.index')
             ->with('message', 'Post Created Successfully');
     }

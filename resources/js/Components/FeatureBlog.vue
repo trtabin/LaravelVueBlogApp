@@ -1,30 +1,29 @@
 <template>
-    <section class="featured container my-5">
-        <div class="row">
-            <div class="one col-lg-4 col-md-6 col-12 mb-3">
-                <img class="img-fluid" src="images/1.jpg" alt="" />
-                <div class="text w-75 h-50 text-light p-4">
-                    <h6>This is a sample title of the blog</h6>
-                    <a class="link" href="#">Read more</a>
-                </div>
-            </div>
-            <div class="one col-lg-4 col-md-6 col-12 mb-3">
-                <img class="img-fluid" src="images/2.jpg" alt="" />
-                <div class="text w-75 h-50 text-light p-4">
-                    <h6>This is a sample title of the blog</h6>
-                    <a class="link" href="#">Read more</a>
-                </div>
-            </div>
-            <div class="one col-lg-4 col-md-6 col-12 mb-3">
-                <img class="img-fluid" src="images/3.jpg" alt="" />
-                <div class="text w-75 h-50 text-light p-4">
-                    <h6>This is a sample title of the blog</h6>
-                    <a class="link" href="#">Read more</a>
-                </div>
-            </div>
+    <div class="one col-lg-4 col-md-6 col-12 mb-3">
+        <img class="img-fluid" :src="getImage(post.image)" alt="" />
+        <div class="text w-75 h-50 text-light p-4">
+            <h6>{{ post.title }}</h6>
+            <Link class="link" :href="route('blog', post.id)">Read more</Link>
         </div>
-    </section>
+    </div>
 </template>
+
+<script>
+import { Link } from "@inertiajs/inertia-vue3";
+export default {
+    components: {
+        Link,
+    },
+    props: {
+        post: Object,
+    },
+    methods: {
+        getImage(pic) {
+            return "/images/" + pic;
+        },
+    },
+};
+</script>
 
 <style>
 .featured .row .one {

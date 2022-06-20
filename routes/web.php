@@ -21,7 +21,8 @@ use App\Models\Post;
 */
 
 Route::get('/', function () {
-    $data = Post::where('isPublished', 1)->latest()->paginate(4);
+    $data = Post::latest()->paginate(10);
+    // $data = Post::where('isPublished', 1)->latest()->paginate(7);
     return Inertia::render('Welcome',[
         'data' => $data
     ]);
@@ -35,10 +36,10 @@ Route::get('/dashboard', function () {
 
 
 
-Route::get('/blog/{post}', function (Post $post) {
-    // dd(compact('post'));
+Route::get('/blog/{id}', function ($id) {
+    $post = Post::with('categories')->where('id', $id)->first();
     return Inertia::render('Blog',[
-        'data' => compact('post')
+        'data' => compact('post'),
     ]);
 })->name('blog');
 

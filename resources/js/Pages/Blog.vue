@@ -5,10 +5,19 @@
         <div class="row">
             <div class="col-sm-8">
                 <h2>{{ data.post.title }}</h2>
-                <h5>Title description, Dec 7, 2017</h5>
-                <div class="fakeimg">Fake Image</div>
-                <p>Some text..</p>
-                <p>
+                <span
+                    v-for="category in data.post.categories"
+                    class="badge badge-secondary mr-1"
+                    >{{ category.name }}</span
+                >
+                <div>
+                    <img
+                        v-if="data.post.image"
+                        style="width: 90%; height: auto"
+                        :src="getImage(data.post.image)"
+                    />
+                </div>
+                <p class="mt-3">
                     {{ data.post.description }}
                 </p>
             </div>
@@ -28,6 +37,11 @@ export default {
     },
     props: {
         data: Object,
+    },
+    methods: {
+        getImage(pic) {
+            return "/images/" + pic;
+        },
     },
 };
 </script>
